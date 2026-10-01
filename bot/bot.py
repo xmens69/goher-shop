@@ -25,10 +25,13 @@ def telegram(method, data):
 
 @app.get("/")
 def home():
-        return send_from_directory(
-    os.path.dirname(os.path.dirname(os.path.abspath(__file__))),
-    "index.html"
-)
+    return open(
+        os.path.join(
+            os.path.dirname(os.path.dirname(os.path.abspath(__file__))),
+            "index.html"
+        ),
+        encoding="utf-8"
+    ).read()
 
 
 @app.post("/telegram-webhook")
