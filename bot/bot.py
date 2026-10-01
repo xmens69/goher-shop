@@ -79,6 +79,18 @@ def telegram_webhook():
                         ]
                     }
                 }
+                    elif text == "/pay":
+            telegram(
+                "sendMessage",
+                {
+                    "chat_id": chat_id,
+                    "text":
+                        "💳 Как оплатить заказ\n\n"
+                        "Оплата производится через PayPal.\n\n"
+                        "📧 PayPal: tomiks2808.com@gmail.com\n\n"
+                        "После оплаты отправьте подтверждение "
+                        "в этот чат."
+                }
             )
         elif text == "/id":
             telegram(
