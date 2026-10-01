@@ -111,7 +111,13 @@ def create_order():
         "message": "Заказ отправлен"
     })
 
-
+telegram(
+    "setWebhook",
+    {
+        "url": "https://goher-shop-production.up.railway.app/telegram-webhook",
+        "secret_token": WEBHOOK_SECRET
+    }
+    )
 if __name__ == "__main__":
 
     port = int(os.environ.get("PORT", 10000))
