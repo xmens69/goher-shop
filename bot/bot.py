@@ -80,7 +80,7 @@ def telegram_webhook():
                     }
                 }
             )
-         elif text.startswich("/pay"):
+            elif text.startswich("/pay"):
             telegram(
                 "sendMessage",
                 {
