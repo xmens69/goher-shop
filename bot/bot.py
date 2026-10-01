@@ -1,7 +1,7 @@
 import os
 import requests
 
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, send_from_directory 
 from flask_cors import CORS
 
 app = Flask(__name__)
@@ -25,7 +25,10 @@ def telegram(method, data):
 
 @app.get("/")
 def home():
-    return "Goher Shop Bot is running!"
+return send_from_directory(
+    os.path.dirname(os.path.dirname(os.path.abspath(__file__))),
+    "index.html"
+)
 
 
 @app.post("/telegram-webhook")
