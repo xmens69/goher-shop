@@ -62,7 +62,24 @@ def telegram_webhook():
                         "о своих заказах."
                 }
             )
-
+        elif text == "/shop":
+            telegram(
+                "sendMessage",
+                {
+                    "chat_id": chat_id,
+                    "text": "🛒 Добро пожаловать в Goher Shop!\n\nНажми кнопку ниже, чтобы открыть магазин:",
+                    "reply_markup": {
+                        "inline_keyboard": [
+                            [
+                                {
+                                    "text": "🛍️ Открыть магазин",
+                                    "url": "https://goher-shop-production.up.railway.app"
+                                }
+                            ]
+                        ]
+                    }
+                }
+            )
         elif text == "/id":
             telegram(
                 "sendMessage",
