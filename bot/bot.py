@@ -25,7 +25,7 @@ def telegram(method, data):
 
 @app.get("/")
 def home():
-return send_from_directory(
+        return send_from_directory(
     os.path.dirname(os.path.dirname(os.path.abspath(__file__))),
     "index.html"
 )
