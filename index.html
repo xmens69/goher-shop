@@ -3,39 +3,86 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
+
 <title>Goher Shop — Brawl Stars</title>
 
 <style>
+
+*{
+box-sizing:border-box;
+}
+
 body{
 margin:0;
 font-family:Arial,sans-serif;
 background:#101827;
-color:#fff
+color:#fff;
 }
+
 main{
 max-width:700px;
 margin:auto;
-padding:24px
+padding:24px;
 }
+
 h1{
 font-size:34px;
-margin-bottom:8px
+margin:0 0 8px;
 }
+
 .sub{
 color:#b9c2d0;
-margin-bottom:24px
+margin-bottom:24px;
 }
+
 .card{
 background:#1c293b;
 border-radius:18px;
 padding:18px;
-margin:14px 0
+margin:14px 0;
 }
+
+.card h2{
+margin-top:0;
+}
+
 .price{
 font-size:20px;
 font-weight:bold;
-margin:8px 0
+margin:12px 0;
 }
+
+.products{
+display:grid;
+grid-template-columns:repeat(2,1fr);
+gap:10px;
+margin-top:15px;
+}
+
+.product{
+background:#26364d;
+border-radius:14px;
+padding:14px;
+cursor:pointer;
+transition:.2s;
+border:2px solid transparent;
+}
+
+.product:hover{
+border-color:#2ea6ff;
+transform:translateY(-2px);
+}
+
+.product strong{
+display:block;
+font-size:19px;
+margin-bottom:5px;
+}
+
+.product span{
+color:#b9c2d0;
+}
+
 button{
 border:0;
 border-radius:12px;
@@ -43,54 +90,92 @@ padding:12px 18px;
 background:#2ea6ff;
 color:white;
 font-weight:bold;
-cursor:pointer
+cursor:pointer;
+font-size:15px;
 }
+
+button:hover{
+opacity:.9;
+}
+
 .note{
 font-size:13px;
 color:#9da9b8;
-margin-top:25px
+margin-top:25px;
+line-height:1.5;
 }
+
 .modal{
 display:none;
 position:fixed;
 inset:0;
-background:#0009;
+background:#000b;
 align-items:center;
 justify-content:center;
 padding:20px;
-box-sizing:border-box
 }
+
 .form{
 background:#182438;
 border-radius:18px;
 padding:20px;
 max-width:500px;
 width:100%;
-box-sizing:border-box
 }
+
 .form h2{
-margin-top:0
+margin-top:0;
 }
+
 .form input,
 .form select{
 width:100%;
-box-sizing:border-box;
 padding:12px;
 margin:7px 0 12px;
 border:0;
 border-radius:10px;
 background:#26364d;
 color:#fff;
-font-size:16px
+font-size:16px;
 }
+
+.summary{
+background:#26364d;
+padding:14px;
+border-radius:12px;
+margin:10px 0 15px;
+}
+
+.summary strong{
+font-size:20px;
+}
+
 .actions{
 display:flex;
 gap:10px;
-flex-wrap:wrap
+flex-wrap:wrap;
 }
+
 .close{
-background:#566274
+background:#566274;
 }
+
+.support{
+margin-top:10px;
+}
+
+@media(max-width:500px){
+
+.products{
+grid-template-columns:1fr;
+}
+
+h1{
+font-size:29px;
+}
+
+}
+
 </style>
 </head>
 
@@ -104,40 +189,114 @@ background:#566274
 Товары и услуги для Brawl Stars
 </div>
 
+
+<!-- КРИСТАЛЛЫ -->
+
 <div class="card">
+
 <h2>💎 Кристаллы</h2>
-<p>Выбери кристаллы и оформи заказ.</p>
-<div class="price">Цена: уточняется</div>
 
-<button onclick="openOrder('Кристаллы')">
-Заказать
-</button>
+<p>
+Выбери нужное количество кристаллов.
+</p>
+
+<div class="products">
+
+<div class="product"
+onclick="openOrder('30 кристаллов',1)">
+<strong>💎 30</strong>
+<span>1 €</span>
 </div>
 
+<div class="product"
+onclick="openOrder('80 кристаллов',2.50)">
+<strong>💎 80</strong>
+<span>2,50 €</span>
+</div>
+
+<div class="product"
+onclick="openOrder('170 кристаллов',5)">
+<strong>💎 170</strong>
+<span>5 €</span>
+</div>
+
+<div class="product"
+onclick="openOrder('360 кристаллов',11)">
+<strong>💎 360</strong>
+<span>11 €</span>
+</div>
+
+<div class="product"
+onclick="openOrder('950 кристаллов',25.50)">
+<strong>💎 950</strong>
+<span>25,50 €</span>
+</div>
+
+<div class="product"
+onclick="openOrder('2000 кристаллов',55)">
+<strong>💎 2000</strong>
+<span>55 €</span>
+</div>
+
+</div>
+
+</div>
+
+
+<!-- ПОДАРКИ -->
+
 <div class="card">
+
 <h2>🎁 Подарки</h2>
-<p>Каталог подарков для Brawl Stars.</p>
 
-<button onclick="openOrder('Подарки')">
-Заказать
+<p>
+Подарки для Brawl Stars.
+</p>
+
+<button onclick="openGiftOrder()">
+🎁 Заказать подарок
 </button>
+
 </div>
+
+
+<!-- ПОДДЕРЖКА -->
 
 <div class="card">
-<h2>💬 Поддержка</h2>
-<p>По вопросам заказа обращайся в Telegram.</p>
 
-<button onclick="window.open('https://t.me/idkama28','_blank')">
-Написать в поддержку
+<h2>💬 Поддержка</h2>
+
+<p>
+Если возникли вопросы по заказу — напиши нам в Telegram.
+</p>
+
+<button
+class="support"
+onclick="window.open('https://t.me/idkama28','_blank')">
+
+📩 Написать в поддержку
+
 </button>
+
 </div>
+
 
 <div class="note">
-Goher Shop • Фан-магазин. Является официальным магазином Supercell.
+
+⚠️ Goher Shop — независимый фан-магазин.
+Не является официальным магазином Supercell.
+
+<br><br>
+
+Перед оформлением заказа внимательно проверь свой Brawl Stars ID.
+
 </div>
 
 </main>
 
+
+
+<!-- ОКНО ЗАКАЗА -->
 
 <div class="modal" id="orderModal">
 
@@ -145,12 +304,36 @@ Goher Shop • Фан-магазин. Является официальным м
 
 <h2>🛍️ Оформление заказа</h2>
 
-<label>Товар</label>
+<label>Выбранный товар</label>
 
 <select id="product">
-<option>Кристаллы</option>
-<option>Подарки</option>
+
+<option value="30 кристаллов" data-price="1">
+💎 30 кристаллов — 1 €
+</option>
+
+<option value="80 кристаллов" data-price="2.5">
+💎 80 кристаллов — 2,50 €
+</option>
+
+<option value="170 кристаллов" data-price="5">
+💎 170 кристаллов — 5 €
+</option>
+
+<option value="360 кристаллов" data-price="11">
+💎 360 кристаллов — 11 €
+</option>
+
+<option value="950 кристаллов" data-price="25.5">
+💎 950 кристаллов — 25,50 €
+</option>
+
+<option value="2000 кристаллов" data-price="55">
+💎 2000 кристаллов — 55 €
+</option>
+
 </select>
+
 
 <label>Количество</label>
 
@@ -158,8 +341,11 @@ Goher Shop • Фан-магазин. Является официальным м
 id="quantity"
 type="number"
 min="1"
+max="20"
 value="1"
+oninput="updateTotal()"
 >
+
 
 <label>Brawl Stars ID</label>
 
@@ -169,6 +355,7 @@ type="text"
 placeholder="#ABC123"
 >
 
+
 <label>Ваш Telegram для связи</label>
 
 <input
@@ -177,79 +364,243 @@ type="text"
 placeholder="@username"
 >
 
+
+<div class="summary">
+
+Итого:
+
+<br>
+
+<strong id="total">
+1 €
+</strong>
+
+</div>
+
+
 <div class="actions">
 
 <button onclick="sendOrder()">
-📩 Отправить заказ
+📩 Оформить заказ
 </button>
 
-<button class="close" onclick="closeOrder()">
+<button
+class="close"
+onclick="closeOrder()">
+
 Закрыть
+
 </button>
 
 </div>
 
 </div>
+
 </div>
+
 
 
 <script>
 
-function openOrder(product){
+let selectedPrice = 1;
 
-document.getElementById("product").value=product;
 
-document.getElementById("orderModal").style.display="flex";
+/* ОТКРЫТИЕ ЗАКАЗА */
+
+function openOrder(product, price){
+
+selectedPrice = price;
+
+const select = document.getElementById("product");
+
+for(let i=0;i<select.options.length;i++){
+
+if(select.options[i].value === product){
+
+select.selectedIndex = i;
+
+break;
 
 }
 
+}
+
+document.getElementById("quantity").value = 1;
+
+updateTotal();
+
+document.getElementById("orderModal").style.display = "flex";
+
+}
+
+
+/* ПОДАРОК */
+
+function openGiftOrder(){
+
+alert(
+"🎁 Заказ подарков оформляется через поддержку.\n\nНажми «Написать в поддержку», чтобы уточнить доступные варианты."
+);
+
+}
+
+
+/* ЗАКРЫТИЕ */
 
 function closeOrder(){
 
-document.getElementById("orderModal").style.display="none";
+document.getElementById("orderModal").style.display = "none";
 
 }
 
 
+/* РАСЧЁТ ЦЕНЫ */
+
+function updateTotal(){
+
+const select = document.getElementById("product");
+
+const option =
+select.options[select.selectedIndex];
+
+selectedPrice =
+parseFloat(option.dataset.price);
+
+let quantity =
+parseInt(document.getElementById("quantity").value);
+
+if(!quantity || quantity < 1){
+quantity = 1;
+}
+
+if(quantity > 20){
+quantity = 20;
+document.getElementById("quantity").value = 20;
+}
+
+const total = selectedPrice * quantity;
+
+document.getElementById("total").textContent =
+total.toFixed(2).replace(".00","") + " €";
+
+}
+
+
+/* ИЗМЕНЕНИЕ ТОВАРА */
+
+document.getElementById("product")
+.addEventListener("change", updateTotal);
+
+
+/* ОТПРАВКА ЗАКАЗА */
+
 function sendOrder(){
 
-const product=
-document.getElementById("product").value;
+const select =
+document.getElementById("product");
 
-const quantity=
-document.getElementById("quantity").value;
+const product =
+select.value;
 
-const playerId=
-document.getElementById("playerId").value.trim();
+const option =
+select.options[select.selectedIndex];
 
-const contact=
-document.getElementById("contact").value.trim();
+const price =
+parseFloat(option.dataset.price);
+
+const quantity =
+parseInt(document.getElementById("quantity").value);
+
+const playerId =
+document.getElementById("playerId")
+.value.trim();
+
+const contact =
+document.getElementById("contact")
+.value.trim();
 
 
-if(!playerId || !contact){
+if(!playerId){
 
-alert("Заполни Brawl Stars ID и Telegram для связи.");
+alert(
+"❌ Введи Brawl Stars ID."
+);
 
 return;
 
 }
 
 
-const text=
-`🛒 Новый заказ — Goher Shop
+if(!contact){
 
-Товар: ${product}
-Количество: ${quantity}
-Brawl Stars ID: ${playerId}
-Telegram покупателя: ${contact}`;
+alert(
+"❌ Введи Telegram для связи."
+);
 
+return;
+
+}
+
+
+if(!quantity || quantity < 1){
+
+alert(
+"❌ Укажи количество товара."
+);
+
+return;
+
+}
+
+
+const total =
+price * quantity;
+
+
+/* ТЕКСТ ЗАКАЗА */
+
+const text =
+
+`🛒 НОВЫЙ ЗАКАЗ — GOHER SHOP
+
+💎 Товар: ${product}
+📦 Количество: ${quantity}
+💰 Сумма: ${total.toFixed(2)} €
+
+🎮 Brawl Stars ID:
+${playerId}
+
+💬 Telegram покупателя:
+${contact}
+
+━━━━━━━━━━━━
+Goher Shop`;
+
+
+/* ОТКРЫВАЕМ TELEGRAM */
 
 window.open(
-"https://t.me/idkama28?text="+encodeURIComponent(text),
+"https://t.me/idkama28?text="
++ encodeURIComponent(text),
 "_blank"
 );
 
 }
+
+
+/* ЗАКРЫТИЕ ПРИ КЛИКЕ ВНЕ ОКНА */
+
+document
+.getElementById("orderModal")
+.addEventListener("click",function(e){
+
+if(e.target === this){
+
+closeOrder();
+
+}
+
+});
 
 </script>
 
