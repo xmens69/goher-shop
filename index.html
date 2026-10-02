@@ -7,7 +7,6 @@
 <title>Goher Shop — Brawl Stars</title>
 
 <style>
-
 *{
 box-sizing:border-box;
 }
@@ -113,6 +112,7 @@ background:#000b;
 align-items:center;
 justify-content:center;
 padding:20px;
+z-index:10;
 }
 
 .form{
@@ -121,6 +121,8 @@ border-radius:18px;
 padding:20px;
 max-width:500px;
 width:100%;
+max-height:92vh;
+overflow:auto;
 }
 
 .form h2{
@@ -164,6 +166,42 @@ background:#566274;
 margin-top:10px;
 }
 
+.paypal-box{
+background:#fff;
+border-radius:12px;
+padding:12px;
+margin-top:10px;
+min-height:48px;
+}
+
+.paypal-title{
+margin:4px 0 8px;
+font-weight:bold;
+}
+
+.status{
+margin-top:12px;
+padding:10px;
+border-radius:10px;
+display:none;
+line-height:1.4;
+}
+
+.status.ok{
+display:block;
+background:#123d2a;
+}
+
+.status.error{
+display:block;
+background:#4a1f27;
+}
+
+.status.info{
+display:block;
+background:#26364d;
+}
+
 @media(max-width:500px){
 
 .products{
@@ -175,7 +213,6 @@ font-size:29px;
 }
 
 }
-
 </style>
 </head>
 
@@ -203,37 +240,37 @@ font-size:29px;
 <div class="products">
 
 <div class="product"
-onclick="openOrder('30 кристаллов',1)">
+onclick="openOrder('30',1)">
 <strong>💎 30</strong>
 <span>1 €</span>
 </div>
 
 <div class="product"
-onclick="openOrder('80 кристаллов',2.50)">
+onclick="openOrder('80',2.50)">
 <strong>💎 80</strong>
 <span>2,50 €</span>
 </div>
 
 <div class="product"
-onclick="openOrder('170 кристаллов',5)">
+onclick="openOrder('170',5)">
 <strong>💎 170</strong>
 <span>5 €</span>
 </div>
 
 <div class="product"
-onclick="openOrder('360 кристаллов',11)">
+onclick="openOrder('360',11)">
 <strong>💎 360</strong>
 <span>11 €</span>
 </div>
 
 <div class="product"
-onclick="openOrder('950 кристаллов',25.50)">
+onclick="openOrder('950',25.50)">
 <strong>💎 950</strong>
 <span>25,50 €</span>
 </div>
 
 <div class="product"
-onclick="openOrder('2000 кристаллов',55)">
+onclick="openOrder('2000',55)">
 <strong>💎 2000</strong>
 <span>55 €</span>
 </div>
@@ -288,12 +325,11 @@ onclick="window.open('https://t.me/idkama28','_blank')">
 
 <br><br>
 
-Перед оформлением заказа внимательно проверь свой Brawl Stars ID.
+Перед оплатой внимательно проверь свой Brawl Stars ID.
 
 </div>
 
 </main>
-
 
 
 <!-- ОКНО ЗАКАЗА -->
@@ -308,27 +344,27 @@ onclick="window.open('https://t.me/idkama28','_blank')">
 
 <select id="product">
 
-<option value="30 кристаллов" data-price="1">
+<option value="30" data-price="1">
 💎 30 кристаллов — 1 €
 </option>
 
-<option value="80 кристаллов" data-price="2.5">
+<option value="80" data-price="2.5">
 💎 80 кристаллов — 2,50 €
 </option>
 
-<option value="170 кристаллов" data-price="5">
+<option value="170" data-price="5">
 💎 170 кристаллов — 5 €
 </option>
 
-<option value="360 кристаллов" data-price="11">
+<option value="360" data-price="11">
 💎 360 кристаллов — 11 €
 </option>
 
-<option value="950 кристаллов" data-price="25.5">
+<option value="950" data-price="25.5">
 💎 950 кристаллов — 25,50 €
 </option>
 
-<option value="2000 кристаллов" data-price="55">
+<option value="2000" data-price="55">
 💎 2000 кристаллов — 55 €
 </option>
 
@@ -353,6 +389,7 @@ oninput="updateTotal()"
 id="playerId"
 type="text"
 placeholder="#ABC123"
+maxlength="50"
 >
 
 
@@ -362,6 +399,7 @@ placeholder="#ABC123"
 id="contact"
 type="text"
 placeholder="@username"
+maxlength="100"
 >
 
 
@@ -378,11 +416,18 @@ placeholder="@username"
 </div>
 
 
-<div class="actions">
+<div class="paypal-title">
+💳 Оплата через PayPal
+</div>
 
-<button onclick="sendOrder()">
-📩 Оформить заказ
-</button>
+<div class="paypal-box" id="paypal-button-container">
+Загрузка PayPal...
+</div>
+
+<div id="status" class="status"></div>
+
+
+<div class="actions">
 
 <button
 class="close"
@@ -399,10 +444,30 @@ onclick="closeOrder()">
 </div>
 
 
-
 <script>
 
 let selectedPrice = 1;
+let paypalReady = false;
+let paypalButtonsRendered = false;
+
+
+const statusBox = document.getElementById("status");
+
+
+function setStatus(message, type){
+
+statusBox.textContent = message;
+statusBox.className = "status " + type;
+
+}
+
+
+function clearStatus(){
+
+statusBox.textContent = "";
+statusBox.className = "status";
+
+}
 
 
 /* ОТКРЫТИЕ ЗАКАЗА */
@@ -418,7 +483,6 @@ for(let i=0;i<select.options.length;i++){
 if(select.options[i].value === product){
 
 select.selectedIndex = i;
-
 break;
 
 }
@@ -426,6 +490,8 @@ break;
 }
 
 document.getElementById("quantity").value = 1;
+
+clearStatus();
 
 updateTotal();
 
@@ -451,6 +517,8 @@ function closeOrder(){
 
 document.getElementById("orderModal").style.display = "none";
 
+clearStatus();
+
 }
 
 
@@ -470,12 +538,17 @@ let quantity =
 parseInt(document.getElementById("quantity").value);
 
 if(!quantity || quantity < 1){
+
 quantity = 1;
+
 }
 
 if(quantity > 20){
+
 quantity = 20;
+
 document.getElementById("quantity").value = 20;
+
 }
 
 const total = selectedPrice * quantity;
@@ -492,98 +565,311 @@ document.getElementById("product")
 .addEventListener("change", updateTotal);
 
 
-/* ОТПРАВКА ЗАКАЗА */
+/* ПРОВЕРКА ПОЛЕЙ */
 
-function sendOrder(){
+function validateForm(){
+
+const playerId =
+document.getElementById("playerId").value.trim();
+
+const contact =
+document.getElementById("contact").value.trim();
+
+let quantity =
+parseInt(document.getElementById("quantity").value);
+
+if(!playerId){
+
+setStatus("❌ Введи Brawl Stars ID.", "error");
+return false;
+
+}
+
+if(!contact){
+
+setStatus("❌ Введи Telegram для связи.", "error");
+return false;
+
+}
+
+if(!quantity || quantity < 1 || quantity > 20){
+
+setStatus("❌ Количество должно быть от 1 до 20.", "error");
+return false;
+
+}
+
+return true;
+
+}
+
+
+/* СОЗДАНИЕ PAYPAL ORDER */
+
+async function createPayPalOrder(){
+
+if(!validateForm()){
+
+throw new Error("Проверь данные заказа.");
+
+}
 
 const select =
 document.getElementById("product");
 
-const product =
-select.value;
-
-const option =
-select.options[select.selectedIndex];
-
-const price =
-parseFloat(option.dataset.price);
+const productCode = select.value;
 
 const quantity =
 parseInt(document.getElementById("quantity").value);
 
 const playerId =
-document.getElementById("playerId")
-.value.trim();
+document.getElementById("playerId").value.trim();
 
 const contact =
-document.getElementById("contact")
-.value.trim();
+document.getElementById("contact").value.trim();
+
+setStatus("Создаём PayPal заказ...", "info");
 
 
-if(!playerId){
+const response = await fetch("/api/paypal/create-order",{
 
-alert(
-"❌ Введи Brawl Stars ID."
+method:"POST",
+
+headers:{
+"Content-Type":"application/json"
+},
+
+body:JSON.stringify({
+
+productCode,
+quantity,
+playerId,
+contact
+
+})
+
+});
+
+
+const data = await response.json();
+
+
+if(!response.ok || !data.id){
+
+throw new Error(
+data.error || "Не удалось создать PayPal заказ."
 );
+
+}
+
+
+return data.id;
+
+}
+
+
+/* PAYPAL APPROVE */
+
+async function onPayPalApprove(data){
+
+setStatus(
+"⏳ Платёж подтверждён. Завершаем оплату...",
+"info"
+);
+
+
+const response = await fetch(
+"/api/paypal/capture-order/" +
+encodeURIComponent(data.orderID),
+{
+
+method:"POST",
+
+headers:{
+"Content-Type":"application/json"
+}
+
+});
+
+
+const result = await response.json();
+
+
+if(!response.ok || !result.ok){
+
+throw new Error(
+result.error || "Не удалось завершить оплату."
+);
+
+}
+
+
+setStatus(
+"✅ Оплата прошла успешно! Заказ отправлен продавцу.",
+"ok"
+);
+
+
+/* Очищаем форму после успешной оплаты */
+
+document.getElementById("playerId").value = "";
+document.getElementById("contact").value = "";
+
+}
+
+
+/* PAYPAL CANCEL */
+
+function onPayPalCancel(){
+
+setStatus(
+"Оплата отменена. Заказ не списан.",
+"info"
+);
+
+}
+
+
+/* PAYPAL ERROR */
+
+function onPayPalError(error){
+
+console.error("PayPal Error:", error);
+
+setStatus(
+"❌ Произошла ошибка PayPal. Попробуй ещё раз.",
+"error"
+);
+
+}
+
+
+/* ЗАГРУЗКА PAYPAL SDK */
+
+async function loadPayPal(){
+
+try{
+
+const configResponse =
+await fetch("/paypal-config");
+
+const config =
+await configResponse.json();
+
+
+if(!config.clientId){
+
+throw new Error("PayPal Client ID не настроен на сервере.");
+
+}
+
+
+/*
+PayPal Client ID можно безопасно использовать
+на клиентской стороне. Secret сюда никогда не попадает.
+*/
+
+const script =
+document.createElement("script");
+
+script.src =
+"https://www.paypal.com/sdk/js?client-id=" +
+encodeURIComponent(config.clientId) +
+"&currency=EUR&components=buttons&intent=capture";
+
+script.onload = function(){
+
+paypalReady = true;
+
+renderPayPalButtons();
+
+};
+
+script.onerror = function(){
+
+setStatus(
+"❌ Не удалось загрузить PayPal.",
+"error"
+);
+
+};
+
+document.head.appendChild(script);
+
+}catch(error){
+
+console.error(error);
+
+setStatus(
+"❌ PayPal пока не настроен.",
+"error"
+);
+
+}
+
+}
+
+
+/* РЕНДЕР КНОПКИ PAYPAL */
+
+function renderPayPalButtons(){
+
+if(!paypalReady || paypalButtonsRendered){
 
 return;
 
 }
 
-
-if(!contact){
-
-alert(
-"❌ Введи Telegram для связи."
-);
+if(!window.paypal){
 
 return;
 
 }
 
+window.paypal.Buttons({
 
-if(!quantity || quantity < 1){
+style:{
+layout:"vertical",
+shape:"rect",
+label:"paypal",
+height:45
+},
 
-alert(
-"❌ Укажи количество товара."
-);
+createOrder: async function(){
 
-return;
+return await createPayPalOrder();
+
+},
+
+onApprove: async function(data){
+
+try{
+
+await onPayPalApprove(data);
+
+}catch(error){
+
+onPayPalError(error);
 
 }
 
+},
 
-const total =
-price * quantity;
+onCancel: onPayPalCancel,
 
+onError: onPayPalError
 
-/* ТЕКСТ ЗАКАЗА */
+}).render("#paypal-button-container")
+.then(function(){
 
-const text =
+paypalButtonsRendered = true;
 
-`🛒 НОВЫЙ ЗАКАЗ — GOHER SHOP
+})
+.catch(function(error){
 
-💎 Товар: ${product}
-📦 Количество: ${quantity}
-💰 Сумма: ${total.toFixed(2)} €
+onPayPalError(error);
 
-🎮 Brawl Stars ID:
-${playerId}
-
-💬 Telegram покупателя:
-${contact}
-
-━━━━━━━━━━━━
-Goher Shop`;
-
-
-/* ОТКРЫВАЕМ TELEGRAM */
-
-window.open(
-"https://t.me/idkama28?text="
-+ encodeURIComponent(text),
-"_blank"
-);
+});
 
 }
 
@@ -602,7 +888,13 @@ closeOrder();
 
 });
 
+
+/* ЗАПУСК PAYPAL */
+
+loadPayPal();
+
 </script>
 
 </body>
-</html>
+  </html>
+  
