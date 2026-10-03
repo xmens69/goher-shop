@@ -737,18 +737,10 @@ console.error("PayPal Error:", error);
 
 let message = "Неизвестная ошибка PayPal.";
 
-if(error){
-    if(error.message){
-        message = error.message;
-    }else if(typeof error === "string"){
-        message = error;
-    }else{
-        try{
-            message = JSON.stringify(error, null, 2);
-        }catch(e){
-            message = String(error);
-        }
-    }
+try{
+    message = JSON.stringify(error, null, 2);
+}catch(e){
+    message = String(error);
 }
 
 setStatus(
@@ -756,7 +748,8 @@ setStatus(
 "error"
 );
 
-  }
+}
+
 
 
 
