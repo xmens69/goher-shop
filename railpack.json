@@ -1,0 +1,5 @@
+{
+  "deploy": {
+    "startCommand": "gunicorn --chdir bot bot:app --bind 0.0.0.0:${PORT:-8000}"
+  }
+}
